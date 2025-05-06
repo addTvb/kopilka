@@ -1,0 +1,20 @@
+{
+  "name": "kopilka",
+  "version": "1.0.0",
+  "description": "Веб-приложение для отслеживания накоплений",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "savings",
+    "tracker",
+    "money",
+    "piggy-bank"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "canvas-confetti": "^1.6.0"
+  }
+}

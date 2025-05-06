@@ -9,11 +9,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const depositAmountInput = document.getElementById('depositAmount');
     const depositBtn = document.getElementById('depositBtn');
     const depositMessage = document.getElementById('depositMessage');
+    const celebrationSound = document.getElementById('celebrationSound');
     
     let totalDays = 365;
     let totalAmount = 0;
     let savedAmount = 0;
     let remainingAmount = 0;
+    let hasShownCelebration = false;
     
     // Load saved state from localStorage if available
     function loadSavedState() {
@@ -22,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const state = JSON.parse(savedState);
             totalDays = state.totalDays || 365;
             savedAmount = state.savedAmount || 0;
+            hasShownCelebration = state.hasShownCelebration || false;
             daysInput.value = totalDays;
             
             // Generate checkboxes
@@ -52,7 +55,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const state = {
             totalDays,
             savedAmount,
-            checkedDays
+            checkedDays,
+            hasShownCelebration
         };
         
         localStorage.setItem('kopilkaState', JSON.stringify(state));
@@ -109,6 +113,95 @@ document.addEventListener('DOMContentLoaded', () => {
         remainingAmountElement.textContent = remainingAmount;
         const progressPercentage = (savedAmount / totalAmount) * 100;
         progressBar.style.width = `${progressPercentage}%`;
+        
+        // Проверка на достижение целевой суммы
+        if (savedAmount >= totalAmount && !hasShownCelebration) {
+            showCelebration();
+        }
+    }
+    
+    // Функция для запуска конфетти и звука при достижении цели
+    function showCelebration() {
+        hasShownCelebration = true;
+        saveState();
+        
+        // Запуск звука
+        if (celebrationSound) {
+            celebrationSound.play().catch(e => console.log('Ошибка воспроизведения звука:', e));
+        }
+        
+        // Запуск конфетти
+        launchConfetti();
+        
+        // Показ сообщения о поздравлении
+        depositMessage.textContent = 'Поздравляем! Вы достигли своей цели накопления!';
+        depositMessage.className = 'deposit-message success celebration-message';
+        
+        // Убираем класс celebration-message через 10 секунд, но оставляем success
+        setTimeout(() => {
+            depositMessage.className = 'deposit-message success';
+        }, 10000);
+    }
+    
+    // Функция для запуска анимации конфетти
+    function launchConfetti() {
+        const duration = 8 * 1000; // 8 секунд
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
+        
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+        
+        // Начальный залп конфетти со всех сторон
+        confetti({
+            particleCount: 150,
+            spread: 180,
+            origin: { x: 0.5, y: 0.5 }
+        });
+        
+        // Продолжительная анимация конфетти с разных сторон
+        const interval = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+            
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+            
+            const particleCount = 50 * (timeLeft / duration);
+            
+            // Конфетти слева
+            confetti(Object.assign({}, defaults, {
+                particleCount,
+                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+                colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+            }));
+            
+            // Конфетти справа
+            confetti(Object.assign({}, defaults, {
+                particleCount,
+                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+                colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff']
+            }));
+            
+            // Конфетти снизу
+            confetti(Object.assign({}, defaults, {
+                particleCount: particleCount / 2,
+                origin: { x: randomInRange(0.2, 0.8), y: 1 },
+                gravity: -1, // Летят вверх
+                colors: ['#ff9900', '#9900ff', '#00ffff', '#ff6699']
+            }));
+        }, 250);
+        
+        // Финальный залп конфетти
+        setTimeout(() => {
+            confetti({
+                particleCount: 200,
+                spread: 180,
+                origin: { x: 0.5, y: 0.5 },
+                colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#ff9900', '#9900ff', '#00ffff']
+            });
+        }, duration - 1000);
     }
     
     // Get all unchecked boxes sorted by value
@@ -227,6 +320,7 @@ document.addEventListener('DOMContentLoaded', () => {
     startButton.addEventListener('click', () => {
         totalDays = parseInt(daysInput.value) || 365;
         savedAmount = 0; // Reset saved amount when generating new checkboxes
+        hasShownCelebration = false; // Сброс флага поздравления
         generateCheckboxes();
         updateSummary();
         saveState();

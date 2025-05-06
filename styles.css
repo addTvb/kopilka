@@ -144,21 +144,60 @@ button#start:hover {
 }
 
 .deposit-message {
-    padding: 10px;
+    margin-top: 10px;
+    padding: 8px;
     border-radius: 4px;
-    display: none;
-}
-
-.deposit-message.success {
-    background-color: #d4edda;
-    color: #155724;
-    display: block;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 0.3s;
 }
 
 .deposit-message.error {
-    background-color: #f8d7da;
-    color: #721c24;
-    display: block;
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef9a9a;
+    opacity: 1;
+}
+
+.deposit-message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+    opacity: 1;
+    animation: pulse 2s infinite;
+    font-weight: bold;
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Стиль для сообщения о поздравлении */
+.deposit-message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #a5d6a7;
+    opacity: 1;
+    animation: pulse 2s infinite;
+    font-weight: bold;
+}
+
+/* Специальный стиль для сообщения о поздравлении */
+.celebration-message {
+    background-color: #fff9c4 !important;
+    color: #ff6f00 !important;
+    border: 2px solid #ffd600 !important;
+    font-size: 1.2em !important;
+    padding: 15px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
 }
 
 .checkboxes-container {
