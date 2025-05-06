@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Копилка</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Копилка</h1>
+        
+        <div class="setup">
+            <label for="days">Количество дней:</label>
+            <input type="number" id="days" min="1" max="1000" value="365">
+            <button id="start">Начать</button>
+        </div>
+        
+        <div class="summary">
+            <div class="total">
+                <h2>Итоговая сумма:</h2>
+                <p id="totalAmount">0</p>
+            </div>
+            <div class="saved">
+                <h2>Накоплено:</h2>
+                <p id="savedAmount">0</p>
+            </div>
+            <div class="remaining">
+                <h2>Осталось накопить:</h2>
+                <p id="remainingAmount">0</p>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+        
+        <div class="deposit-form">
+            <h2>Внести сумму:</h2>
+            <div class="deposit-controls">
+                <input type="number" id="depositAmount" min="1" placeholder="Введите сумму">
+                <button id="depositBtn">Внести</button>
+            </div>
+            <div id="depositMessage" class="deposit-message"></div>
+        </div>
+        
+        <div id="checkboxes" class="checkboxes-container"></div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html> 
